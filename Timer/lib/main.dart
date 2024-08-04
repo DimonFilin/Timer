@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/themes.dart';
+import 'package:flutter_app/timer_widget/timer.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'generated/l10n.dart';
 
 void main() =>  runApp(MyApp());
+
+const int waittime = 3;
 
 class MyApp extends StatelessWidget {
   @override
@@ -53,27 +56,68 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
           title: Text(S.of(context).appBarTitle)
       ),
-      body: Center(
-    child: Column(
-    mainAxisAlignment: MainAxisAlignment.center, // Выравнивание по центру по вертикали
-
-        children: [
-          Text(
-            S.of(context).MainTitle,
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center, // Выравнивание текста по центру по горизонтали
-          ),
-          Text(
-            S.of(context).MainTitle,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center, // Выравнивание текста по центру по горизонтали
-          ),
-        ],)
-    )
-    );
+      body: StateTimerPage(waitTimeInSec: waittime,));
+    //       Text(
+    //         S.of(context).MainTitle,
+    //         style: Theme.of(context).textTheme.bodyLarge,
+    //         textAlign: TextAlign.center, // Выравнивание текста по центру по горизонтали
+    //       ),
+    //       Text(
+    //         S.of(context).MainTitle,
+    //         style: Theme.of(context).textTheme.bodyMedium,
+    //         textAlign: TextAlign.center, // Выравнивание текста по центру по горизонтали
+    //       ),
+    //     ],)
+    // )
+    // );
   }
 }
-
+//
+// class MainPageBody extends StatefulWidget {
+//   const MainPageBody({super.key});
+//
+//   @override
+//   State<MainPageBody> createState() => _MainPageBodyState();
+// }
+//
+// class _MainPageBodyState extends State<MainPageBody> {
+//   int timeLeft = 5;
+//   //Главный метод
+//   void _StartCountDown(){
+//     Timer.periodic(Duration(seconds: 1), (Timer timer) {
+//         setState(() {
+//           if(timeLeft>0) {
+//             timeLeft--;
+//           }
+//           else {
+//             timer.cancel();
+//           }
+//         });
+//     }
+//     );
+//   }
+//
+//
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child:Column(//Колонка в которой будет все приложение
+//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,//Выравнивание с местом меж объектами
+//           children: [
+//           Text(timeLeft.toString(), style: Theme.of(context).textTheme.bodyLarge),//Текст в котором будет время
+//           IconButton(onPressed: _StartCountDown,//Кнопка для запуска таймера
+//             icon: Icon(Icons.not_started_outlined),
+//             iconSize: 70.0, // Устанавливает размер иконки
+//             padding: EdgeInsets.all(16.0), // Устанавливает отступы вокруг иконки
+//             style: ButtonStyle(foregroundColor:  WidgetStateProperty.all<Color>(Theme.of(context).textTheme.bodyLarge!.color!)))
+//             ])
+//       ),
+//     )
+//       ;
+//   }
+// }
 
 //         theme: ThemeData(
 //         colorScheme: ColorScheme.light(primary: Colors.deepOrange),),//theme  - тема для всего приложения
