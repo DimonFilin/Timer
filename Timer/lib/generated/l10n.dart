@@ -50,10 +50,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `TImer`
+  /// `Timer`
   String get appBarTitle {
     return Intl.message(
-      'TImer',
+      'Timer',
       name: 'appBarTitle',
       desc: '',
       args: [],
@@ -65,6 +65,16 @@ class S {
     return Intl.message(
       'Main fjdfkjdkf',
       name: 'MainTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finish`
+  String get Finish {
+    return Intl.message(
+      'Finish',
+      name: 'Finish',
       desc: '',
       args: [],
     );

@@ -8,7 +8,7 @@ import 'generated/l10n.dart';
 
 void main() =>  runApp(MyApp());
 
-const int waittime = 3;
+const int waittime = 90;
 
 class MyApp extends StatelessWidget {
   @override
