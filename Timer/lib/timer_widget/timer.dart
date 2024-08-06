@@ -11,14 +11,14 @@ class StateTimerPage extends StatefulWidget {
 }
 
 class _StateTimerPageState extends State<StateTimerPage> {
-
+//Основные переменные
   Timer? _timer;
   late int _waitTime;
   var _precent = 1.0;
   bool isStart = false;
   var timeStr = '00:00';
 
-
+//Создание виджета
   @override
   void initState() {
     // TODO: implement initState
@@ -26,12 +26,14 @@ class _StateTimerPageState extends State<StateTimerPage> {
     _calculationTime();
   }
 
+  //Удаление виджета
   @override
   void dispose() {
     // TODO: implement dispose
     _timer?.cancel();
   }
 
+  //Старт таймера
   void _start(BuildContext context) {
     if (_waitTime > 0) {
       setState(() {
@@ -48,11 +50,13 @@ class _StateTimerPageState extends State<StateTimerPage> {
     }
   }
 
+  //Рестарт таймера
   void _restart() {
     _waitTime = widget.waitTimeInSec;
     _calculationTime();
   }
 
+  //Приостановка таймера
   void _pause() {
     _timer?.cancel();
     setState(() {
@@ -60,6 +64,7 @@ class _StateTimerPageState extends State<StateTimerPage> {
     });
   }
 
+  //Обновление времени на экране
   void _calculationTime()
   {
     var minStr = (_waitTime~/60).toString().padLeft(2,'0');
@@ -72,6 +77,7 @@ class _StateTimerPageState extends State<StateTimerPage> {
 
   @override
   Widget build(BuildContext context) {
+    //Получение размера из контекста)выиджета выше по дереву)
     final size = MediaQuery
         .of(context)
         .size;
@@ -82,7 +88,7 @@ class _StateTimerPageState extends State<StateTimerPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          Container(//1 кнопка рестарт
               height: size.height * 0.1,
               width: size.width * 0.2,
               margin: const EdgeInsets.all(10),
@@ -99,14 +105,14 @@ class _StateTimerPageState extends State<StateTimerPage> {
                     .primaryColor,
               )
           ),
-          Stack(
+          Stack(//Виджет для расстановки других виждетов друг на друге
             alignment: Alignment.center,
             children: [
               Container(
                   height: size.height * 0.1,
                   width: size.width * 0.2,
                   margin: const EdgeInsets.all(10),
-                  child: CircularProgressIndicator(
+                  child: CircularProgressIndicator(//Круговой идентефикатор
                     backgroundColor: Theme
                         .of(context)
                         .canvasColor,
@@ -114,10 +120,11 @@ class _StateTimerPageState extends State<StateTimerPage> {
                         .of(context)
                         .primaryColor,
                     value: _precent,
-                    strokeWidth: 8,
+                    strokeWidth: 8,//Ширина круга
                   )
               ),
-              Positioned(child: Text((timeStr), style: Theme
+              Positioned(
+                child: Text((timeStr), style: Theme
                   .of(context)
                   .textTheme
                   .bodyLarge, textAlign: TextAlign.center,),
@@ -126,7 +133,7 @@ class _StateTimerPageState extends State<StateTimerPage> {
             ],
 
           ),
-          Container(
+          Container(//Кнопка запуска/остановки
               height: size.height * 0.1,
               width: size.width * 0.2,
               margin: const EdgeInsets.all(10),
