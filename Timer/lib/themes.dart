@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 final kLightTheme = ThemeData.light().copyWith(
   primaryColor: Colors.blue, // Используйте цвет, который хорошо виден на светлом фоне

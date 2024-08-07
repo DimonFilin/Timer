@@ -1,99 +1,78 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
-
 part 'timer_event.dart';
 part 'timer_state.dart';
 
-
-class TimerBlock extends Bloc<TimerEvent, TimeState> {
+class TimerBlock extends Bloc<TimerEvent, TimerState> {
   Timer? _timer;
   final int _waitTimeInSec;
   int _currentWaitTimeInSec;
 
-  TimerBlock({required int waitTimeInSec}) :
-        _waitTimeInSec = waitTimeInSec,
+  TimerBlock({required int waitTimeInSec})
+      : _waitTimeInSec = waitTimeInSec,
         _currentWaitTimeInSec = waitTimeInSec,
-        super(TimeInitial(_calculationTime(waitTimeInSec), 1));
+        super(TimerInitial(_calculationTime(waitTimeInSec), 1)) {
+    on<TimerStarted>(_onTimerStarted);
+    on<TimerPaused>(_onTimerPaused);
+    on<TimerReset>(_onTimerReset);
+    on<TimerTicked>(_onTimerTicked);
+    on<TimerStop>(_onTimerStop);
+  }
 
   @override
-  Future<void> close (){
+  Future<void> close() {
     _timer?.cancel();
     return super.close();
   }
 
-  @override
-  Stream<TimeState> mapEventToState(
-      TimerEvent event,
-      ) async * {
-    if(event is TimerStarted)
-      {
-        yield* _mapTimerStartedToState(event);
-      } else if(event is TimerPaused)
-     {
-       yield* _mapTimerPausedToState(event);
-     } else if(event is TimerReset)
-     {
-       yield* _mapTimerResetToState(event);
-     } else if(event is TimerTicked)
-     {
-       yield* _mapTimerTickedToState(event);
-     } else if(event is TimerStop)
-     {
-       yield* _mapTimerStopToState(event);
-     }
+  void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
+    if (_currentWaitTimeInSec > 0) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        _currentWaitTimeInSec--;
+        add(TimerTicked(
+            timeStr: _calculationTime(_currentWaitTimeInSec),
+            percent: _currentWaitTimeInSec / _waitTimeInSec));
+        if (_currentWaitTimeInSec <= 0) {
+          _timer?.cancel();
+          add(const TimerStop());
+        }
+      });
+    }
   }
 
-  Stream<TimeState> _mapTimerStartedToState (TimerStarted start) async*{
-    if(_currentWaitTimeInSec>0)
-      {
-        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          _currentWaitTimeInSec--;
-          add(TimerTicked(timeStr: _calculationTime(_currentWaitTimeInSec), percent: _currentWaitTimeInSec/_waitTimeInSec));
-          if(_currentWaitTimeInSec<=0){
-            _timer?.cancel();
-            add(TimerStop());
-          }
-        });
-      }
+  void _onTimerPaused(TimerPaused event, Emitter<TimerState> emit) {
+    if (state is TimerRunState) {
+      _timer?.cancel();
+      emit(TimerPauseState(
+          _calculationTime(_currentWaitTimeInSec),
+          _currentWaitTimeInSec / _waitTimeInSec));
+    }
   }
 
-  Stream<TimeState> _mapTimerPausedToState (TimerPaused pause) async* {
-  if(state is TimeRunState){
-    _timer?.cancel();
-    yield TimePauseState(_calculationTime(_currentWaitTimeInSec),
-        _currentWaitTimeInSec/_waitTimeInSec);
-  }
-  }
-
-  Stream<TimeState> _mapTimerResetToState (TimerReset reset) async* {
+  void _onTimerReset(TimerReset event, Emitter<TimerState> emit) {
     _currentWaitTimeInSec = _waitTimeInSec;
-      yield TimeResetState(_calculationTime(_currentWaitTimeInSec),
-          _currentWaitTimeInSec/_waitTimeInSec, state.isRun);
-
+    emit(TimerResetState(
+        _calculationTime(_currentWaitTimeInSec),
+        _currentWaitTimeInSec / _waitTimeInSec,
+        state.isRun));
   }
 
-  Stream<TimeState> _mapTimerStopToState (TimerStop stop) async* {
-    if(state is TimeRunState){
-      yield  const TimerRunComplete();
+  void _onTimerStop(TimerStop event, Emitter<TimerState> emit) {
+    if (state is TimerRunState) {
+      emit(const TimerRunComplete());
     }
   }
 
-  Stream<TimeState> _mapTimerTickedToState (TimerTicked tick) async* {
-    yield TimeRunState(tick.timeStr, tick.percent);
-
+  void _onTimerTicked(TimerTicked event, Emitter<TimerState> emit) {
+    emit(TimerRunState(event.timeStr, event.percent));
   }
 
-
-  //Обновление времени на экране
-  static String _calculationTime(int _waitTime)
-  {
-    var minStr = (_waitTime~/60).toString().padLeft(2,'0');
-    var secStr = (_waitTime%60).toString().padLeft(2,'0');
+  static String _calculationTime(int _waitTime) {
+    var minStr = (_waitTime ~/ 60).toString().padLeft(2, '0');
+    var secStr = (_waitTime % 60).toString().padLeft(2, '0');
     return '$minStr:$secStr';
-    }
   }
-
+}

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/themes.dart';
-import 'package:flutter_app/timer_widget/timer.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'block_widget/block_timer2.dart';
+import 'block_widget/block_timer_page.dart';
 import 'generated/l10n.dart';
+
 
 void main() =>  runApp(MyApp());
 
@@ -56,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
           title: Text(S.of(context).appBarTitle)
       ),
-      body: StateTimerPage(waitTimeInSec: waittime,));
+      body: BloCTimerPage(waitTimeInSec: waittime,));
     //       Text(
     //         S.of(context).MainTitle,
     //         style: Theme.of(context).textTheme.bodyLarge,

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/block_widget/bloc/timer_block.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BloCTimerPage extends StatelessWidget {
+import 'bloc/timer_block.dart';
+//import 'package:flutter_app/block_widget/block_timer_page.dart';
+
+class BLoCTimerPage extends StatelessWidget {
   final int _waitTimeInSec;
 
-  const BloCTimerPage({Key? key, required int waitTimeInSec})
+  const BLoCTimerPage({Key? key, required int waitTimeInSec})
       : _waitTimeInSec = waitTimeInSec,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-    create: (_) => TimerBlock(waitTimeInSec: _waitTimeInSec),
-    child: const _BlocTimerPage(),
+      create: (_) => TimerBlock(waitTimeInSec: _waitTimeInSec),
+      child: const _BlocTimerPage(),
     );
   }
 }
@@ -25,14 +27,12 @@ class _BlocTimerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return BlocListener<TimerBlock, TimerState>(
-      listener: (context, state) {
-        if (state is TimerRunComplete) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Finish")));
-        }
-      },
-      child: BlocBuilder<TimerBlock, TimerState>(
+    return BlocListener<TimerBlock, TimerState>(listener: (context, state) {
+      if (state is TimerRunComplete) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Finish')));
+      }
+    }, child: BlocBuilder<TimerBlock, TimerState>(
         buildWhen: (prev, state) => prev.runtimeType != state.runtimeType,
         builder: (context, state) {
           return Center(
@@ -47,10 +47,8 @@ class _BlocTimerPage extends StatelessWidget {
                     child: FloatingActionButton(
                       onPressed: () => context.read<TimerBlock>().add(TimerReset()),
                       child: const Icon(Icons.restart_alt),
-                      foregroundColor: Theme.of(context).canvasColor,
-                      backgroundColor: Theme.of(context).primaryColor,
                     ),
-                  ),
+                  )
                 ],
                 Stack(
                   alignment: Alignment.center,
@@ -60,20 +58,13 @@ class _BlocTimerPage extends StatelessWidget {
                       width: size.width * 0.2,
                       margin: const EdgeInsets.all(10),
                       child: CircularProgressIndicator(
-                        backgroundColor: Theme.of(context).appBarTheme.foregroundColor,
-                        color: Theme.of(context).primaryColor,
                         value: context.select((TimerBlock bloc) => bloc.state.precent),
-                        //value: state.precent,
+                        // value: state.percent,
+                        backgroundColor: Colors.red[800],
                         strokeWidth: 8,
                       ),
                     ),
-                    Positioned(
-                      child: Text(
-                        state.timeStr,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    const Positioned(child: TimerText())
                   ],
                 ),
                 Container(
@@ -89,27 +80,23 @@ class _BlocTimerPage extends StatelessWidget {
                     child: state.isRun
                         ? const Icon(Icons.pause)
                         : const Icon(Icons.play_arrow),
-                    foregroundColor: Theme.of(context).canvasColor,
-                    backgroundColor: Theme.of(context).primaryColor,
                   ),
                 ),
               ],
             ),
           );
-        },
-      ),
+        }));
+  }
+}
+
+class TimerText extends StatelessWidget {
+  const TimerText({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      context.select((TimerBlock bloc) => bloc.state.timeStr),
+      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      textAlign: TextAlign.center,
     );
   }
 }
-//Пример передаци параметра извне
-// class TimerText extends StatelessWidget {
-//   const TimerText({Key? key}) : super(key: key);
-//   @override
-//   Widget build(BuildContext context) {
-//     return Text(
-//       context.select((TimerBloc bloc) => bloc.state.timeStr),
-//       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-//       textAlign: TextAlign.center,
-//     );
-//   }
-// }

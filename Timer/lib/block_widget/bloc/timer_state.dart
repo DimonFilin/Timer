@@ -1,46 +1,46 @@
 part of 'timer_block.dart';
 
 
-abstract class TimeState extends Equatable {
+abstract class TimerState extends Equatable {
   final double precent;
   final String timeStr;
   final bool isRun;
 
-  const TimeState (this.timeStr, this.precent, this.isRun);
+  const TimerState (this.timeStr, this.precent, this.isRun);
 
   @override get props => [timeStr, precent];
 }
 
 
-class TimeInitial extends TimeState {
-  const TimeInitial(String timeStr, double percent) : super(timeStr, percent, false);
+class TimerInitial extends TimerState {
+  const TimerInitial(String timeStr, double percent) : super(timeStr, percent, false);
 
   @override
-  String toString() => 'TimeInitial { timeStr: $timeStr }';
+  String toString() => 'TimerInitial { timeStr: $timeStr }';
 }
 
-class TimeRunState extends TimeState {
-  const TimeRunState(String timeStr, double percent) : super(timeStr, percent, true);
+class TimerRunState extends TimerState {
+  const TimerRunState(String timeStr, double percent) : super(timeStr, percent, true);
 
   @override
-  String toString() => 'TimeRunState { timeStr: $timeStr }';
+  String toString() => 'TimerRunState { timeStr: $timeStr }';
 }
 
-class TimePauseState extends TimeState {
-  const TimePauseState(String timeStr, double percent) : super(timeStr, percent, false);
+class TimerPauseState extends TimerState {
+  const TimerPauseState(String timeStr, double percent) : super(timeStr, percent, false);
 
   @override
-  String toString() => 'TimePauseState { timeStr: $timeStr }';
+  String toString() => 'TimerPauseState { timeStr: $timeStr }';
 }
 
-class TimeResetState extends TimeState {
-  const TimeResetState(String timeStr, double percent, bool isRun) : super(timeStr, percent, isRun);
+class TimerResetState extends TimerState {
+  const TimerResetState(String timeStr, double percent, bool isRun) : super(timeStr, percent, isRun);
 
   @override
-  String toString() => 'TimeResetState { timeStr: $timeStr }';
+  String toString() => 'TimerResetState { timeStr: $timeStr }';
 }
 
-class TimerRunComplete extends TimeState {
+class TimerRunComplete extends TimerState {
   const TimerRunComplete()
       : super('00:00',0, false);
 }
