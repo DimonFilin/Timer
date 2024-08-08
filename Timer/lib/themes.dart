@@ -9,9 +9,10 @@ final kLightTheme = ThemeData.light().copyWith(
   ),
   canvasColor: Colors.black,
   textTheme: TextTheme(
-    bodyLarge: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold), // Устанавливаем цвет текста для bodyText1
+    bodyLarge: TextStyle(color: Colors.lightBlue, fontSize: 18, fontWeight: FontWeight.bold), // Устанавливаем цвет текста для bodyText1
     bodyMedium: TextStyle(color: Colors.lightBlue), // Устанавливаем цвет текста для bodyText2
   ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(unselectedItemColor: Colors.grey, selectedItemColor: Colors.blue, backgroundColor: Colors.white)
 );
 
 final kDarkTheme = ThemeData.dark().copyWith(
@@ -23,7 +24,8 @@ final kDarkTheme = ThemeData.dark().copyWith(
   ),
   canvasColor: Colors.black,
   textTheme: TextTheme(
-    bodyLarge: TextStyle(color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold), // Устанавливаем цвет текста для bodyText1
+    bodyLarge: TextStyle(color: Colors.amberAccent, fontSize: 18, fontWeight: FontWeight.bold), // Устанавливаем цвет текста для bodyText1
     bodyMedium: TextStyle(color: Colors.amberAccent), // Устанавливаем цвет текста для bodyText2
   ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(unselectedItemColor: Colors.grey, selectedItemColor: Colors.amber)
 );

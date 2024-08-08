@@ -69,7 +69,7 @@ class _BlocTimerPage extends StatelessWidget {
                     ),
                     Positioned(
                       child: Text(
-                        state.timeStr,
+                        context.select((TimerBlock bloc) => bloc.state.timeStr),
                         style: Theme.of(context).textTheme.bodyLarge,
                         textAlign: TextAlign.center,
                       ),

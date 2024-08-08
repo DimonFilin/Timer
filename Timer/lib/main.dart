@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/themes.dart';
+import 'package:flutter_app/timer_widget/timer.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'block_widget/block_timer2.dart';
 import 'block_widget/block_timer_page.dart';
 import 'generated/l10n.dart';
+import 'getx_widget/getx_timer_page.dart';
 
 
 void main() =>  runApp(MyApp());
 
-const int waittime = 90;
+const int waittime = 5;
 
 class MyApp extends StatelessWidget {
   @override
@@ -45,6 +47,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int selectIndex = 0;
+  late Widget _bodyWidget;
+  // static List<Widget> listTimerWidgets = <Widget>[
+  //  const StateTimerPage(waitTimeInSec: waittime),
+  //  const BloCTimerPage(waitTimeInSec: waittime),
+  //   GetXTimerPage(waitTimeInSec: waittime)
+  // ];
+
+  @override
+  void initState() {
+    super.initState();
+    onItemTopped(selectIndex);
+  }
+
+  Widget _buildCurrentWidget(int type){
+    Widget? buildWidget;
+    switch(type){
+      case 0:
+        return const StateTimerPage(waitTimeInSec: waittime);
+        break;
+      case 1:
+        return const BloCTimerPage(waitTimeInSec: waittime);
+        break;
+      case 2:
+        return GetXTimerPage(waitTimeInSec: waittime);
+        break;
+        deafault:
+        throw ArgumentError();
+        break;
+    }
+    return const StateTimerPage(waitTimeInSec: waittime);
+  }
+
+  void onItemTopped(int index){
+   setState(() {
+     selectIndex = index;
+     _bodyWidget = _buildCurrentWidget(index);
+
+   });
+    }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -57,7 +100,21 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
           title: Text(S.of(context).appBarTitle)
       ),
-      body: BloCTimerPage(waitTimeInSec: waittime,));
+      body: _bodyWidget,
+      bottomNavigationBar:  BottomNavigationBar(
+        currentIndex: selectIndex,
+        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+        unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+        onTap: onItemTopped,
+        items: const [
+          BottomNavigationBarItem(icon: (Icon(Icons.access_alarm)), label: 'NoStates'),
+          BottomNavigationBarItem(icon: (Icon(Icons.access_time)), label: 'BloC'),
+          BottomNavigationBarItem(icon: (Icon(Icons.add_alarm)), label: 'GetX'),
+        ],
+      ),
+      
+    );
     //       Text(
     //         S.of(context).MainTitle,
     //         style: Theme.of(context).textTheme.bodyLarge,
